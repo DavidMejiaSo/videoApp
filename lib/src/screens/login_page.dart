@@ -6,6 +6,7 @@ import '../../design_tools/tool_widgets/app_buttons.dart';
 import '../../design_tools/tool_widgets/app_colors.dart';
 import '../../design_tools/tool_widgets/spacing.dart';
 import '../../design_tools/tool_widgets/tool_widgets.dart';
+import '../providers/authentication_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -41,7 +42,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     //     throw Exception('Could not launch $url');
     //   }
     // }
-
+    String email = '';
+    String password = '';
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -85,6 +87,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Center(
                       child: TextFormField(
+                        onChanged: (value) {
+                          email = value;
+                        },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -133,6 +138,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: AppColors.grey.withOpacity(0.4),
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: TextFormField(
+                      onChanged: (value) {
+                        password = value;
+                      },
                       // obscureText: ref.watch(obscure_text_login),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -181,7 +189,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     texto: "Login",
                     context: context,
                     onPressed: () async {
-                      GoRouter.of(context).go('/landingPage');
+                      ref
+                          .watch(authProvider.notifier)
+                          .loginUser(email, password);
                     },
                     primaryColor: AppColors.red.withOpacity(0.4),
                     textColor: AppColors.white,

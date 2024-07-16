@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:video_app/design_tools/tool_widgets/app_colors.dart';
 import 'package:video_player/video_player.dart';
 
-import '../infrastructure/entities/video.dart';
+import '../infrastructure/entities/Video.dart';
 
 class VideoPostWidget extends StatefulWidget {
   final Video video;
@@ -19,8 +19,11 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
 
   @override
   void initState() {
+    String urlString = widget.video.videoLink;
+    Uri uri = Uri.parse(urlString);
+
     super.initState();
-    _controller = VideoPlayerController.network(widget.video.videoLink)
+    _controller = VideoPlayerController.contentUri(uri)
       ..initialize().then((_) {
         setState(() {});
         _controller.play();

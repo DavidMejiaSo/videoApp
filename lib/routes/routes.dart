@@ -2,12 +2,14 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 
 import 'package:video_app/src/screens/login_page.dart';
+import 'package:video_app/src/screens/profile_user_page.dart';
 import 'package:video_app/src/screens/register_page.dart';
 
+import '../src/providers/authentication_provider.dart';
 import '../src/screens/landing_page.dart';
 
 final goRouterProvider = StateProvider((ref) {
-  //final user = ref.watch(authProvider);
+  final user = ref.watch(authProvider);
   //final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
@@ -30,22 +32,27 @@ final goRouterProvider = StateProvider((ref) {
         path: '/landingPage',
         builder: (context, state) => const LandingScreen(),
       ),
+      GoRoute(
+        name: 'profile_page',
+        path: '/profilePage',
+        builder: (context, state) => const ProfileScreen(),
+      ),
     ],
 
-    // redirect: (context, state) {
-    //   // final authStatus = user.authStatus;
-//
-    //   //  if (authStatus == AuthStatus.notAuthenticated) {
-    //   //    if (state.fullPath == "/loginPage") return null;
-    //   //    return '/loginPage';
-    //   //  }
-//
-    //   //  if (authStatus == AuthStatus.authenticated) {
-    //   //    if (state.fullPath == '/loginPage') {
-    //   //      return '/landingPage';
-    //   //    }
-    //   //  }
-    //   //  return null;
-    // },
+    redirect: (context, state) {
+      final authStatus = user.authStatus;
+
+      if (authStatus == AuthStatus.notAuthenticated) {
+        if (state.fullPath == "/loginPage") return null;
+        return '/loginPage';
+      }
+      if (authStatus == AuthStatus.authenticated) {
+        if (state.fullPath == '/loginPage' ||
+            state.fullPath == '/registerPage') {
+          return '/profilePage';
+        }
+      }
+      return null;
+    },
   );
 });

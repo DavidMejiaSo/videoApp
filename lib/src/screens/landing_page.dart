@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:video_app/design_tools/tool_widgets/necesary_images.dart';
-import 'package:video_app/infrastructure/entities/video.dart';
+import 'package:video_app/src/providers/video_provider.dart';
 
 import '../../design_tools/tool_widgets/app_colors.dart';
 
 import '../../design_tools/tool_widgets/tool_widgets.dart';
 
 import '../../widgets/video_card.dart';
-import '../providers/providers_dev.dart';
 
 class LandingScreen extends ConsumerStatefulWidget {
   const LandingScreen({super.key});
@@ -32,7 +31,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
         child: Stack(
           children: [
             Consumer(builder: (context, ref, child) {
-              final videosData = ref.watch(videosListProvider); //-->lISTADO
+              final videosData = ref.watch(videoProvider).videos; //-->lISTADO
               return Container(
                 decoration: BoxDecoration(
                     color: AppColors.paleWhite.withOpacity(0.5),
@@ -45,7 +44,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                   padding: const EdgeInsets.only(top: 100),
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: videosData.length,
+                    itemCount: videosData!.length,
                     itemBuilder: (context, index) {
                       final video = videosData[index];
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:video_app/enviroments/enviroments.dart';
 import 'package:video_app/routes/routes.dart';
 
 void main() async {
-  // await Environment.initEnvironment();
+  await Enviroment.initEnviroment();
+
   // WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: MyApp()));
 }
