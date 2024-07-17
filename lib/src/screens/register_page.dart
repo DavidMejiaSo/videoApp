@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../design_tools/tool_widgets/app_buttons.dart';
 import '../../design_tools/tool_widgets/app_colors.dart';
 import '../../design_tools/tool_widgets/spacing.dart';
@@ -15,6 +16,22 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -39,7 +56,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             icon: Icons.arrow_back,
                             context: context,
                             onPressed: () {
-                              //ref.watch(favouriteProductsUserProvider);
                               GoRouter.of(context).go('/loginPage');
                             },
                             fontSize: 5,
@@ -80,11 +96,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     //-------------------------------------------
                     Spacing.vertical(10),
                     Container(
-                      //Container de el Usuario
+                      //Container del Nombre
                       color: Color.fromARGB(255, 235, 235, 235),
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Center(
                         child: TextFormField(
+                          controller: _nameController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -106,10 +123,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                               borderSide: BorderSide(color: Colors.transparent),
                             ),
-                            labelText: "",
+                            labelText: "Name",
                             labelStyle: TextStyle(),
-
-                            // Nuevo campo para mostrar el mensaje de error
                           ),
                         ),
                       ),
@@ -126,11 +141,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     //-------------------------------------------
                     Spacing.vertical(10),
                     Container(
-                      //Container de el Usuario
+                      //Container del Email
                       color: Color.fromARGB(255, 235, 235, 235),
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Center(
                         child: TextFormField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -152,63 +168,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                               borderSide: BorderSide(color: Colors.transparent),
                             ),
-                            labelText: "",
+                            labelText: "Email",
                             labelStyle: TextStyle(),
-
-                            // Nuevo campo para mostrar el mensaje de error
                           ),
                         ),
                       ),
                     ),
 
-                    Spacing.vertical(10),
-
-                    Row(
-                      children: [
-                        AppWidgets.mainText(context, "ID", 4),
-                      ],
-                    ),
-                    Spacing.vertical(10),
-                    Container(
-                      //Container de el Usuario
-                      color: Color.fromARGB(255, 235, 235, 235),
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Center(
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            labelText: "",
-                            labelStyle: TextStyle(),
-
-                            // Nuevo campo para mostrar el mensaje de error
-                          ),
-                        ),
-                      ),
-                    ),
-                    //-------------------------------------------
-                    Spacing.vertical(10),
-
-                    //---------------------------------------
                     Spacing.vertical(10),
 
                     Row(
@@ -219,11 +185,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                     Spacing.vertical(10),
                     Container(
-                      //Container de el Usuario
+                      //Container del Password
                       color: Color.fromARGB(255, 235, 235, 235),
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Center(
                         child: TextFormField(
+                          controller: _passwordController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -245,55 +212,41 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                               borderSide: BorderSide(color: Colors.transparent),
                             ),
-                            labelText: "password",
+                            labelText: "Password",
                             labelStyle: TextStyle(),
-
-                            // Nuevo campo para mostrar el mensaje de error
                           ),
                         ),
                       ),
                     ),
 
                     Spacing.vertical(10),
-                    //  Container(
-                    //    //Container de el Usuario
-                    //    color: Color.fromARGB(255, 235, 235, 235),
-                    //    width: MediaQuery.of(context).size.width * 0.9,
-                    //    child: Center(
-                    //      child: TextFormField(
-                    //        decoration: InputDecoration(
-                    //            border: OutlineInputBorder(
-                    //              borderRadius: BorderRadius.circular(10.0),
-                    //              borderSide: BorderSide(color: AppColors.grey),
-                    //            ),
-                    //            focusedBorder: OutlineInputBorder(
-                    //              borderRadius: BorderRadius.circular(10.0),
-                    //              borderSide: BorderSide(color: AppColors.grey),
-                    //            ),
-                    //            enabledBorder: OutlineInputBorder(
-                    //              borderRadius: BorderRadius.circular(10.0),
-                    //              borderSide: BorderSide(color: Colors.transparent),
-                    //            ),
-                    //            errorBorder: OutlineInputBorder(
-                    //              borderRadius: BorderRadius.circular(10.0),
-                    //              borderSide: BorderSide(color: Colors.transparent),
-                    //            ),
-                    //            focusedErrorBorder: OutlineInputBorder(
-                    //              borderRadius: BorderRadius.circular(10.0),
-                    //              borderSide: BorderSide(color: Colors.transparent),
-                    //            ),
-                    //            labelText: "Confirma tu contraseña",
-                    //            labelStyle: TextStyle(),
-                    //            errorText: ref
-                    //            .read(RegisterFormProvider.notifier)
-                    //            .onPasswordChange == value ?  Text ('melo')
-                    //            // Nuevo campo para mostrar el mensaje de error
-                    //            ),
-                    //      ),
-                    //    ),
-                    //  ),
+
                     //---------------------------------------
                     Spacing.vertical(10),
+
+                    Row(
+                      children: [
+                        AppWidgets.mainText(context, "Profile Picture", 4),
+                      ],
+                    ),
+
+                    Spacing.vertical(10),
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: Container(
+                        color: Color.fromARGB(255, 235, 235, 235),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        // height: 150,
+                        child: Center(
+                          child: _image == null
+                              ? Text("Tap to select an image")
+                              : Image.file(_image!, fit: BoxFit.cover),
+                        ),
+                      ),
+                    ),
+
+                    Spacing.vertical(10),
+
                     Row(
                       children: [
                         Container(
@@ -342,7 +295,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     AppButtons().blackButton(
                       context: context,
                       texto: "Register",
-                      onPressed: () async {},
+                      onPressed: () async {
+                        // Aquí puedes implementar la lógica para registrar al usuario
+                      },
                       primaryColor: AppColors.red.withOpacity(0.6),
                       textColor: AppColors.white,
                       fontSize: 4,

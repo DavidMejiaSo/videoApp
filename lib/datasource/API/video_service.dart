@@ -9,16 +9,14 @@ class VideosService {
 
   Future<List<Video>> getAllVideos(String token) async {
     try {
-      print('Starting request to /video with token: $token');
       final response = await dio.get(
         '/video',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      print('Response received: ${response.data}');
+
       final List<Video> videos = VideoMapper.jsonToEntityList(response.data);
       return videos;
     } catch (e) {
-      print('Error occurred: ${e.toString()}');
       throw Exception("Algo salió mal: ${e.toString()}");
     }
   }

@@ -38,6 +38,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  Future<void> registerUser(NewUser newUser) async {
+    try {
+      final user = await authRepository.register(newUser);
+      _settLoggedUser(user);
+    } on CustomError catch (e) {
+      logout(errorMessage: e.message);
+    } catch (e) {
+      logout(errorMessage: 'Error desconocido ${e.toString()}');
+    }
+  }
+
   logout({String? errorMessage}) async {
     await keyValueStorageService.removeKey('token');
     //todo: lIMPIAR TOKEN

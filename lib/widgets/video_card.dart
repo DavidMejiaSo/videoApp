@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:video_app/design_tools/tool_widgets/app_colors.dart';
 import 'package:video_player/video_player.dart';
 
 import '../infrastructure/entities/Video.dart';
@@ -19,16 +18,25 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
 
   @override
   void initState() {
+    super.initState();
+
     String urlString = widget.video.videoLink;
     Uri uri = Uri.parse(urlString);
 
-    super.initState();
-    _controller = VideoPlayerController.contentUri(uri)
+    _controller = VideoPlayerController.networkUrl(uri)
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
         _isPlaying = true;
+      }).catchError((error) {
+        print("Error initializing video player: $error");
       });
+
+    _controller.addListener(() {
+      if (_controller.value.hasError) {
+        print("Video player error: ${_controller.value.errorDescription}");
+      }
+    });
   }
 
   @override
@@ -50,70 +58,79 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.grey.withOpacity(0.2),
-      child: Column(
+    return Scaffold(
+      body: Stack(
         children: [
-          // User info
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(widget.video
-                  .ownerId), // Asumiendo que ownerId es un enlace a la foto del usuario
-            ),
-            title: Text(widget.video.ownerName),
-            subtitle: Text(widget.video.date),
-            trailing: IconButton(
-              icon: Icon(Icons.more_vert),
-              onPressed: () {},
-            ),
-          ),
-          // Video
           GestureDetector(
             onTap: _togglePlayPause,
-            child: AspectRatio(
-              aspectRatio: _controller.value.isInitialized
-                  ? _controller.value.aspectRatio
-                  : 16 / 9,
+            child: Center(
               child: _controller.value.isInitialized
-                  ? VideoPlayer(_controller)
-                  : Center(child: CircularProgressIndicator()),
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : CircularProgressIndicator(),
             ),
           ),
-          // Interaction icons
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          Positioned(
+            top: 40,
+            left: 16,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.favorite_border),
-                  onPressed: () {},
+                CircleAvatar(
+                  backgroundImage: NetworkImage(widget.video.ownerId),
                 ),
-                Text('${widget.video.like} likes'),
-                SizedBox(width: 16.0),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {},
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.video.ownerName,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      widget.video.date,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          // Description
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                widget.video.description,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
+          Positioned(
+            bottom: 40,
+            left: 16,
+            right: 16,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.video.description,
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite_border, color: Colors.white),
+                      onPressed: () {},
+                    ),
+                    Text(
+                      '${widget.video.like} likes',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(width: 16.0),
+                    IconButton(
+                      icon: Icon(Icons.share, color: Colors.white),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          // Divider
-          const Divider(
-            thickness: 5,
-            color: Colors.white,
           ),
         ],
       ),

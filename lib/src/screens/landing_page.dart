@@ -42,7 +42,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                     )),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 100),
-                  child: ListView.builder(
+                  child: PageView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: videosData!.length,
                     itemBuilder: (context, index) {

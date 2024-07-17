@@ -24,7 +24,23 @@ class Authentication {
     try {
       final response = await dio
           .post('/login', data: {'email': email, 'password': password});
-      print(response);
+
+      final user = UserMapper.simpleUserJsonToEntity(response.data);
+
+      return user;
+    } catch (e) {
+      throw Exception("Algo salió mal ${e.toString()}");
+    }
+  }
+
+  Future<User> register(NewUser newUser) async {
+    try {
+      final response = await dio.post('/register', data: {
+        'email': newUser.email,
+        'password': newUser.password,
+        'name': newUser.name,
+        'photo_url': newUser.profilePhoto
+      });
 
       final user = UserMapper.simpleUserJsonToEntity(response.data);
 
