@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_app/infrastructure/entities/user.dart';
+import 'package:video_app/src/providers/authentication_provider.dart';
 import '../../design_tools/tool_widgets/app_buttons.dart';
 import '../../design_tools/tool_widgets/app_colors.dart';
 import '../../design_tools/tool_widgets/spacing.dart';
@@ -20,6 +22,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   File? _image;
+  String _name = "";
+  String _email = "";
+  String _password = "";
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -97,34 +102,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     Spacing.vertical(10),
                     Container(
                       //Container del Nombre
-                      color: Color.fromARGB(255, 235, 235, 235),
+                      color: const Color.fromARGB(255, 235, 235, 235),
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Center(
                         child: TextFormField(
+                          onChanged: (value) {
+                            _name = value;
+                          },
                           controller: _nameController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
+                              borderSide:
+                                  const BorderSide(color: AppColors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
+                              borderSide:
+                                  const BorderSide(color: AppColors.grey),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             labelText: "Name",
-                            labelStyle: TextStyle(),
+                            labelStyle: const TextStyle(),
                           ),
                         ),
                       ),
@@ -142,34 +155,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     Spacing.vertical(10),
                     Container(
                       //Container del Email
-                      color: Color.fromARGB(255, 235, 235, 235),
+                      color: const Color.fromARGB(255, 235, 235, 235),
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Center(
                         child: TextFormField(
+                          onChanged: (value) {
+                            _email = value;
+                          },
                           controller: _emailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
+                              borderSide:
+                                  const BorderSide(color: AppColors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
+                              borderSide:
+                                  const BorderSide(color: AppColors.grey),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             labelText: "Email",
-                            labelStyle: TextStyle(),
+                            labelStyle: const TextStyle(),
                           ),
                         ),
                       ),
@@ -186,34 +207,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     Spacing.vertical(10),
                     Container(
                       //Container del Password
-                      color: Color.fromARGB(255, 235, 235, 235),
+                      color: const Color.fromARGB(255, 235, 235, 235),
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Center(
                         child: TextFormField(
+                          onChanged: (value) {
+                            _password = value;
+                          },
                           controller: _passwordController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
+                              borderSide:
+                                  const BorderSide(color: AppColors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: AppColors.grey),
+                              borderSide:
+                                  const BorderSide(color: AppColors.grey),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(color: Colors.transparent),
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
                             ),
                             labelText: "Password",
-                            labelStyle: TextStyle(),
+                            labelStyle: const TextStyle(),
                           ),
                         ),
                       ),
@@ -234,12 +263,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     GestureDetector(
                       onTap: _pickImage,
                       child: Container(
-                        color: Color.fromARGB(255, 235, 235, 235),
+                        color: const Color.fromARGB(255, 235, 235, 235),
                         width: MediaQuery.of(context).size.width * 0.9,
                         // height: 150,
                         child: Center(
                           child: _image == null
-                              ? Text("Tap to select an image")
+                              ? const Text("Tap to select an image")
                               : Image.file(_image!, fit: BoxFit.cover),
                         ),
                       ),
@@ -272,19 +301,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         GestureDetector(
                           onTap: () {},
-                          child: Container(
-                            child: Row(
-                              children: [
-                                AppWidgets.smallText(
-                                    context, "Accept terms and conditions.", 3),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.01,
-                                ),
-                                AppWidgets.smallText(context, "Click here", 3,
-                                    color: AppColors.red)
-                              ],
-                            ),
+                          child: Row(
+                            children: [
+                              AppWidgets.smallText(
+                                  context, "Accept terms and conditions.", 3),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.01,
+                              ),
+                              AppWidgets.smallText(context, "Click here", 3,
+                                  color: AppColors.red)
+                            ],
                           ),
                         )
                       ],
@@ -296,6 +322,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       context: context,
                       texto: "Register",
                       onPressed: () async {
+                        final newUser = NewUser(
+                            name: _name,
+                            email: _email,
+                            password: _password,
+                            profilePhoto: _image!);
+
+                        ref.watch(authProvider.notifier).registerUser(newUser);
                         // Aquí puedes implementar la lógica para registrar al usuario
                       },
                       primaryColor: AppColors.red.withOpacity(0.6),

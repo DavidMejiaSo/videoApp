@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 
 import 'package:video_app/src/screens/login_page.dart';
+import 'package:video_app/src/screens/new_post_page.dart';
 import 'package:video_app/src/screens/profile_user_page.dart';
 import 'package:video_app/src/screens/register_page.dart';
 
@@ -13,7 +14,7 @@ final goRouterProvider = StateProvider((ref) {
   //final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
-    redirectLimit: 3,
+    redirectLimit: 100,
     initialLocation: '/loginPage',
     //refreshListenable: goRouterNotifier,
     routes: [
@@ -33,6 +34,11 @@ final goRouterProvider = StateProvider((ref) {
         builder: (context, state) => const LandingScreen(),
       ),
       GoRoute(
+        name: 'new_post_page',
+        path: '/newPostPage',
+        builder: (context, state) => const CreateVideoScreen(),
+      ),
+      GoRoute(
         name: 'profile_page',
         path: '/profilePage',
         builder: (context, state) => const ProfileScreen(),
@@ -47,8 +53,7 @@ final goRouterProvider = StateProvider((ref) {
         return '/loginPage';
       }
       if (authStatus == AuthStatus.authenticated) {
-        if (state.fullPath == '/loginPage' ||
-            state.fullPath == '/registerPage') {
+        if (state.fullPath == '/loginPage') {
           return '/profilePage';
         }
       }

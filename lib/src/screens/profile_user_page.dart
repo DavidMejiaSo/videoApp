@@ -3,9 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../design_tools/tool_widgets/app_colors.dart';
-
 import '../../enviroments/enviroments.dart';
+import '../../widgets/video_card.dart';
+import '../../widgets/video_thumbnail.dart';
 import '../providers/authentication_provider.dart';
+
+import '../providers/user_video_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -23,6 +26,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authProvider).user;
+    final videos = ref.watch(userVideoProvider).videos;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -31,86 +35,98 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Icon(Icons.lock, color: Colors.black, size: 18),
-            // ignore: prefer_const_constructors
             Text(user?.name ?? '', style: TextStyle(color: Colors.black)),
             const Icon(Icons.more_vert, color: Colors.black),
           ],
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    profilePhoto(user!.photoUrl, user.name),
-                    const SizedBox(height: 10),
-                    Text(
-                      user.name,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              color: Colors.white,
+              child: Column(
+                children: [
+                  profilePhoto(user!.photoUrl, user.name),
+                  const SizedBox(height: 10),
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    "Bajista",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildStatColumn("10", "Posts"),
+                      const SizedBox(width: 20),
+                      _buildStatColumn("180", "Following"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      GoRouter.of(context).go('/landingPage');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      side: const BorderSide(
+                          color: Color.fromARGB(255, 72, 23, 23)),
                     ),
-                    const SizedBox(height: 5),
-                    const Text(
-                      "Bajista",
-                      style: TextStyle(color: Colors.grey),
+                    child: const Text("Edit Profile"),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      GoRouter.of(context).go('/newPostPage');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      side: const BorderSide(
+                          color: Color.fromARGB(255, 72, 23, 23)),
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildStatColumn("10", "Posts"),
-                        const SizedBox(width: 20),
-                        _buildStatColumn("180", "Following"),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        GoRouter.of(context).go('/landingPage');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 72, 23, 23)),
-                      ),
-                      child: const Text("Edit Profile"),
-                    ),
-                    SizedBox(height: 20),
-                    _buildSocialMediaIcons(),
-                  ],
-                ),
+                    child: const Text("New Post"),
+                  ),
+                  _buildSocialMediaIcons(),
+                ],
               ),
-              Container(
+            ),
+            Expanded(
+              child: Container(
                 color: AppColors.white,
                 child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2,
-                    childAspectRatio: 1,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
                   ),
-                  itemCount: 12, // Número de publicaciones
+                  itemCount: videos.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: Text(
-                          "Post $index",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
+                    final video = videos[index];
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: VideoPostWidget(video: video),
+                            );
+                          },
+                        );
+                      },
+                      child: VideoThumbnail(video: video),
                     );
                   },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -129,15 +145,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       children: [
         Text(
           number,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colors.grey,
           ),

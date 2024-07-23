@@ -6,8 +6,6 @@ import 'package:video_app/src/providers/video_provider.dart';
 
 import '../../design_tools/tool_widgets/app_colors.dart';
 
-import '../../design_tools/tool_widgets/tool_widgets.dart';
-
 import '../../widgets/video_card.dart';
 
 class LandingScreen extends ConsumerStatefulWidget {
@@ -20,7 +18,6 @@ class LandingScreen extends ConsumerStatefulWidget {
 class _LandingScreenState extends ConsumerState<LandingScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -28,84 +25,44 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            Consumer(builder: (context, ref, child) {
-              final videosData = ref.watch(videoProvider).videos; //-->lISTADO
-              return Container(
-                decoration: BoxDecoration(
-                    color: AppColors.paleWhite.withOpacity(0.5),
-                    image: DecorationImage(
-                      opacity: 0.2,
-                      fit: BoxFit.contain,
-                      image: AssetImage(NecessaryImages.logo),
-                    )),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: PageView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: videosData!.length,
-                    itemBuilder: (context, index) {
-                      final video = videosData[index];
-
-                      return VideoPostWidget(video: video);
-                    },
-                  ),
-                ),
-              );
-            }),
-            // Positioned(
-            //   top: 0,
-            //   left: 0,
-            //   right: 0,
-            //   child: Center(child: _searchProduct()),
-            // ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _searchProduct() {
-    return AppWidgets.customCard(
-      containerWidth: MediaQuery.of(context).size.width * 0.9,
-      topRightRadius: 14,
-      topLeftRadius: 14,
-      bottomRightRadius: 14,
-      bottomLeftRadius: 14,
-      cardColor: Colors.black.withOpacity(0.2),
-      margin: const EdgeInsets.only(top: 30, bottom: 20, left: 15),
-      child: ExpansionTile(
-        title: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.search,
-                  color: AppColors.white,
-                ),
+        child: Consumer(builder: (context, ref, child) {
+          final videosData = ref.watch(videoProvider).videos; //-->lISTADO
+          return Container(
+            decoration: BoxDecoration(
+              color: AppColors.paleWhite.withOpacity(0.5),
+              image: DecorationImage(
+                opacity: 0.2,
+                fit: BoxFit.cover,
+                image: AssetImage(NecessaryImages.logo),
               ),
             ),
-            Expanded(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: TextField(
-                  // controller: searchController,
-                  style: TextStyle(color: AppColors.white),
-                  decoration: InputDecoration(
-                    hintStyle:
-                        TextStyle(color: AppColors.white.withOpacity(0.5)),
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {},
-                ),
-              ),
+            child: PageView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: videosData!.length,
+              itemBuilder: (context, index) {
+                final video = videosData[index];
+                return Stack(
+                  children: [
+                    // Fondo opaco del video
+                    Opacity(
+                      opacity: 0.5,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(video.videoLink),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // VideoPostWidget
+                    VideoPostWidget(video: video),
+                  ],
+                );
+              },
             ),
-          ],
-        ),
-        children: [],
+          );
+        }),
       ),
     );
   }

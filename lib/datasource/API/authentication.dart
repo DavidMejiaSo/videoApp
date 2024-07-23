@@ -35,13 +35,21 @@ class Authentication {
 
   Future<User> register(NewUser newUser) async {
     try {
-      final response = await dio.post('/register', data: {
+      // Crear FormData para enviar el archivo y los datos adicionales
+      final formData = FormData.fromMap({
+        'name': newUser.name,
         'email': newUser.email,
         'password': newUser.password,
-        'name': newUser.name,
-        'photo_url': newUser.profilePhoto
+        'photo_url': await MultipartFile.fromFile(newUser.profilePhoto.path,
+            filename: 'profile_photo.jpg'),
       });
 
+      final response = await dio.post(
+        '/register',
+        data: formData,
+      );
+
+      print(response.data);
       final user = UserMapper.simpleUserJsonToEntity(response.data);
 
       return user;

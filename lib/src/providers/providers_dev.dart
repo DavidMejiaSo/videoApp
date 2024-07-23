@@ -1,6 +1,6 @@
 import 'package:riverpod/riverpod.dart';
 
-import '../../infrastructure/entities/video.dart';
+import '../../infrastructure/entities/Video.dart';
 
 final videosListProvider = StateProvider<List<Video>>((ref) {
   return [

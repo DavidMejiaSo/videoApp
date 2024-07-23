@@ -33,4 +33,27 @@ class VideoMapper {
 
     return videos;
   }
+
+  static Video jsonToEntity(Map<String, dynamic> json) {
+    final url = Enviroment.Url;
+
+    final id = json['_id'].toString();
+    final videoLink = json['videoLink'] ?? '';
+    final date = DateTime.parse(json['date']).toLocal().toString();
+    final like = json['like'] ?? 0;
+    final ownerId = json['ownerId'] ?? '';
+    final ownerName = json['ownerName'] ?? '';
+
+    final description = json['description'] ?? '';
+
+    return Video(
+      id: id,
+      videoLink: '$url$videoLink',
+      date: date,
+      like: like,
+      ownerId: ownerId,
+      ownerName: ownerName,
+      description: description,
+    );
+  }
 }
