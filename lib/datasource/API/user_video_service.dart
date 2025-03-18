@@ -48,31 +48,10 @@ class UserVideosUser {
                 },
               ));
 
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Data: ${response.data}');
       final Video video = VideoMapper.jsonToEntity(response.data['video']);
       return video;
     } catch (e) {
-      print('Error: ${e.toString()}');
       throw Exception("Algo salió mal: ${e.toString()}");
     }
   }
-  // Future<Video> createNewVideo(String token, NewVideoPost newvideo) async {
-  //   try {
-  //     final response = await dio.post(
-  //       '/video',
-  //       data: {
-  //         'date': newvideo.date,
-  //         'description': newvideo.description,
-  //         'videoLink': newvideo.video,
-  //       },
-  //       options: Options(headers: {'Authorization': 'Bearer $token'}),
-  //     );
-  //     print(response);
-  //     final Video video = VideoMapper.jsonToEntity(response.data);
-  //     return video;
-  //   } catch (e) {
-  //     throw Exception("Algo salió mal: ${e.toString()}");
-  //   }
-  // }
 }

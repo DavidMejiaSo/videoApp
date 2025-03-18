@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:video_app/src/providers/favourites_user_provider.dart';
 
 import '../../design_tools/tool_widgets/app_colors.dart';
 import '../../enviroments/enviroments.dart';
@@ -27,6 +28,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(authProvider).user;
     final videos = ref.watch(userVideoProvider).videos;
+    final favourites = ref.watch(favouriteProvider).favourites;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -56,44 +58,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    "Bajista",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildStatColumn("10", "Posts"),
                       const SizedBox(width: 20),
-                      _buildStatColumn("180", "Following"),
+                      _buildStatColumn(
+                          favourites.length.toString(), "Likes you"),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      GoRouter.of(context).go('/landingPage');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      side: const BorderSide(
-                          color: Color.fromARGB(255, 72, 23, 23)),
-                    ),
-                    child: const Text("Edit Profile"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon:
+                            const Icon(Icons.home_filled, color: Colors.black),
+                        onPressed: () async {
+                          GoRouter.of(context).go('/landingPage');
+                        },
+                      ),
+                      const SizedBox(width: 20),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline,
+                            color: Colors.black),
+                        onPressed: () {
+                          GoRouter.of(context).go('/newPostPage');
+                        },
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      GoRouter.of(context).go('/newPostPage');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      side: const BorderSide(
-                          color: Color.fromARGB(255, 72, 23, 23)),
-                    ),
-                    child: const Text("New Post"),
-                  ),
-                  _buildSocialMediaIcons(),
                 ],
               ),
             ),
